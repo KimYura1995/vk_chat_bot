@@ -1,0 +1,108 @@
+# -*- coding: utf-8 -*-
+
+GROUP_ID = 196289557
+TOKEN = "token"
+API_KEY = "fdf4be9e-0a6a-4be6-8836-5df01c9d5b9b"
+
+INTENTS = [
+    {
+        "name": "Заказ билета",
+        "tokens": ("/ticket", "заказ", "купит", "билет"),
+        "scenario": "ticket_order",
+        "answer": None
+    },
+    {
+        "name": "Справка",
+        "tokens": ("/help", "помог", "помощ", "скажит"),
+        "scenario": None,
+        "answer": "Для того чтобы заказать билет введите в чате '/ticket' и следуйте дальнейшим "
+                  "инструкциям.\nНеобходимо будет ввести пункты отправления и назначения, дату отправления, "
+                  "кол-во мест.\nПосле чего подтвердить введенные данные."
+                  "\nДля получения справки введите '/help'."
+    }
+]
+
+SCENARIOS = {
+    "ticket_order": {
+        "first_step": "step1",
+        "steps": {
+            "step1": {
+                "text": "Для заказа билета, введите пункт отправления.",
+                "failure_text": "К сожалению я не знаю такого города.",
+                "failure_handler": "failure_city_name",
+                "handler": "handle_city_name_from",
+                "next_step": "step2"
+            },
+            "step2": {
+                "text": "Введите пункт назначения.",
+                "failure_text": "К сожалению я не знаю такого города.",
+                "failure_handler": "failure_city_name",
+                "handler": "handle_city_name_to",
+                "next_step": "step3"
+            },
+            "step3": {
+                "text": "Введите дату вылета в формате ДД-ММ-ГГГГ.",
+                "failure_text": "Вы ввели неправильную дату, дата возможна в формате ДД-ММ-ГГГГ.\nЛибо билетов на "
+                                "данную дату нет.",
+                "handler": "handle_date",
+                "next_step": "step4"
+            },
+            "step4": {
+                "gen_text": "flight_message_handler",
+                "failure_text": "Необходимо ввести номер подходящего рейса",
+                "handler": "handle_choice",
+                "next_step": "step5"
+            },
+            "step5": {
+                "text": "Введите полностью ФИО (пример, Иванов Иван Иванович)",
+                "failure_text": "Необходимо ввести ФИО полностью (пример, Иванов Иван Иванович)",
+                "handler": "handle_full_name",
+                "next_step": "step6"
+            },
+            "step6": {
+                "text": "Укажите количество мест (от 1 до 5).",
+                "failure_text": "Количество мест ограничено от 1 до 5.",
+                "handler": "handle_number_of_places",
+                "next_step": "step7",
+            },
+            "step7": {
+                "text": "Напишите комментарий к своему заказу в произвольной форме",
+                "handler": "handle_comment",
+                "next_step": "step8"
+            },
+            "step8": {
+                "text": "Уточните правильность введенных данных."
+                        "\nФИО: {full_name}"
+                        "\nГород отправления {from_city}, город прибытия {to_city}, дата отправления {date}, "
+                        "выбран рейс:\n"
+                        "{choice_flight}\nКол-во мест {numb_places}.\nВаш комментарий:\n{comment}\nВсе верно? (Да/Нет)",
+                "failure_text": "В чате напишите свой ответ в формате Да/Нет",
+                "handler": "handle_check_info",
+                "next_step": "step9"
+            },
+            "step9": {
+                "text": "Введите номер телефона для подтверждения заказа.",
+                "failure_text": "Набранный номер не корректный.",
+                "handler": "handle_phone_number",
+                "next_step": "step10"
+            },
+            "step10": {
+                "text": "Наши операторы свяжутся с Вами. Спасибо! ",
+                "image": "make_ticket_handler",
+                "handler": None,
+                "next_step": None
+            }
+        }
+    }
+}
+
+DEFAULT_ANSWER = "К сожалению не могу ответить на даный вопрос (Рейсов по данным направлениям нет)." \
+                 "\nДля справки в чате введите '/help'"
+
+DB_CONFIG = dict(
+    provider="postgres",
+    user="postgres",
+    password="081295",
+    host="localhost",
+    database="vk_chat_bot"
+)

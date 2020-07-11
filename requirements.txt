@@ -1,0 +1,12 @@
+certifi==2020.6.20
+chardet==3.0.4
+fuzzywuzzy==0.18.0
+idna==2.9
+Pillow==7.2.0
+pony==0.7.13
+psycopg2==2.8.5
+python-Levenshtein==0.12.0
+requests==2.24.0
+six==1.15.0
+urllib3==1.25.9
+vk-api==11.8.0
